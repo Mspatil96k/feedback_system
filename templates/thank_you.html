@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - Student Feedback System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="success-message">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1>Thank You!</h1>
+            <p>Your feedback has been submitted successfully.</p>
+            <div class="animation-container">
+                <div class="confetti">
+                    <i class="fas fa-star" style="color: #fbbf24;"></i>
+                    <i class="fas fa-heart" style="color: #ef4444;"></i>
+                    <i class="fas fa-thumbs-up" style="color: #3b82f6;"></i>
+                </div>
+            </div>
+            <a href="{{ url_for('index') }}" class="submit-btn" style="text-decoration: none; display: inline-block; margin-top: 1rem;">
+                <i class="fas fa-paper-plane"></i>
+                Submit Another Feedback
+            </a>
+        </div>
+    </div>
+
+    <style>
+        .success-icon {
+            animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .animation-container {
+            position: relative;
+            height: 100px;
+            margin: 2rem 0;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .confetti i {
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .confetti i:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .confetti i:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0);
+            }
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+        }
+    </style>
+</body>
+</html> 

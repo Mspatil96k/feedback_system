@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Feedback System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .wave-animation {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%234f46e5' fill-opacity='0.1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            z-index: -1;
+            animation: wave 10s linear infinite;
+        }
+
+        @keyframes wave {
+            0% { background-position-x: 0; }
+            100% { background-position-x: 1440px; }
+        }
+
+        .container {
+            position: relative;
+            overflow: visible;
+        }
+
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 15s infinite;
+        }
+
+        .shape:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .shape:nth-child(2) { top: 20%; right: 10%; animation-delay: 2s; }
+        .shape:nth-child(3) { bottom: 10%; left: 15%; animation-delay: 4s; }
+        .shape:nth-child(4) { bottom: 20%; right: 15%; animation-delay: 6s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .form-header p {
+            color: #6366f1;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+
+        .feedback-form {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .form-group label i {
+            color: #6366f1;
+            margin-right: 0.5rem;
+        }
+
+        .submit-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .submit-btn:hover::after {
+            left: 100%;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            background-color: #fff;
+            font-size: 1rem;
+            color: #4a5568;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-select:hover {
+            border-color: #6366f1;
+        }
+
+        .form-select option {
+            padding: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="wave-animation"></div>
+    <div class="container">
+        <div class="floating-shapes">
+            <i class="fas fa-star shape" style="font-size: 2rem;"></i>
+            <i class="fas fa-graduation-cap shape" style="font-size: 3rem;"></i>
+            <i class="fas fa-book shape" style="font-size: 2.5rem;"></i>
+            <i class="fas fa-pencil-alt shape" style="font-size: 2rem;"></i>
+        </div>
+
+        <div class="form-header">
+            <h1 class="title">Student Feedback System</h1>
+            <p>Your opinion matters! Help us improve our teaching quality.</p>
+        </div>
+
+        <form action="{{ url_for('submit_feedback') }}" method="POST" class="feedback-form">
+            <div class="form-group">
+                <label for="name"><i class="fas fa-user"></i>Name:</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+            </div>
+
+            <div class="form-group">
+                <label for="enrollment_number"><i class="fas fa-id-card"></i>Enrollment Number:</label>
+                <input type="text" id="enrollment_number" name="enrollment_number" required placeholder="Enter your enrollment number">
+            </div>
+
+            <div class="form-group">
+                <label for="subject"><i class="fas fa-book"></i>Subject:</label>
+                <select id="subject" name="subject" required class="form-select">
+                    <option value="">Select Subject</option>
+                    {% for code, name in subjects %}
+                    <option value="{{ code }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="teacher"><i class="fas fa-chalkboard-teacher"></i>Teacher:</label>
+                <select id="teacher" name="teacher" required class="form-select">
+                    <option value="">Select Teacher</option>
+                    {% for teacher in teachers %}
+                    <option value="{{ teacher }}">{{ teacher }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-star"></i>Rating:</label>
+                <div class="star-rating">
+                    <input type="radio" id="star5" name="rating" value="5" required>
+                    <label for="star5" title="5 stars">★</label>
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star4" title="4 stars">★</label>
+                    <input type="radio" id="star3" name="rating" value="3">
+                    <label for="star3" title="3 stars">★</label>
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star2" title="2 stars">★</label>
+                    <input type="radio" id="star1" name="rating" value="1">
+                    <label for="star1" title="1 star">★</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="feedback_text"><i class="fas fa-comment"></i>Feedback:</label>
+                <textarea id="feedback_text" name="feedback_text" rows="5" required placeholder="Please share your thoughts and suggestions..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-paper-plane"></i>
+                Submit Feedback
+            </button>
+        </form>
+
+        <div class="admin-link">
+            <a href="{{ url_for('admin_login') }}">
+                <i class="fas fa-lock"></i>
+                Admin Login
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Add animation when form loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach((group, index) => {
+                group.style.animation = `slideUp 0.5s ease-out ${index * 0.1}s both`;
+            });
+        });
+    </script>
+</body>
+</html> 
